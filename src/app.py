@@ -28,16 +28,30 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
-
+#GET all family memebers
 @app.route('/members', methods=['GET'])
-def handle_hello():
-    # This is how you can use the Family datastructure by calling its methods
+def get_all_members():
     members = jackson_family.get_all_members()
-    response_body = {"hello": "world",
-                     "family": members}
-    return jsonify(response_body), 200
+    return jsonify(members), 200
 
+#GET one member by ID
+@app.route('/members/<int:member_id>', methods=['GET'])
+def get_fam_member(member_id):
+    member =  jackson_family.get_member(member_id)
+    return jsonify(member), 200
 
+#POST add new member
+@app.route('/members', methods=['POST'])
+def add_fam_member():
+    info = request.get_json()
+    result = jackson_family.add_member(info)
+    return jsonify(result), 200
+
+#DELETE member by ID
+@app.route('/members/<int:member_id>', methods=['DELETE'])
+def delete_fam_member(member_id):
+    result = jackson_family.delete_member(member_id)
+    return jsonify(result), 200
 
 # This only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
